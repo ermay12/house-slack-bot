@@ -57,7 +57,7 @@ function sendMessage(message) {
 
 function processCommand(req, res) {
   sendMessage("hi did someone call me?");
-  res.send("success!");
+  res.send(`Thank you <@${req.body.user_id}>`);
 }
 
 function processNewMessage(req) {}

@@ -62,4 +62,4 @@ typings/
 
 # config and secret keys
 sakejrkey.pem
-
+config.json
