@@ -56,8 +56,11 @@ function sendMessage(message) {
 }
 
 function processCommand(req, res) {
-  sendMessage("hi did someone call me?");
-  res.send(`Thank you <@${req.body.user_id}>`);
+  //sendMessage("hi did someone call me?");
+  res.send({
+    text: `Thank you <@${req.body.user_id}>`,
+    response_type: "in_channel"
+  });
 }
 
 function processNewMessage(req) {}
