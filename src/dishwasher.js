@@ -108,15 +108,20 @@ exports.dishwasherStart = function(req, res) {
 };
 
 exports.dishwasherMessage = function(req, res) {
+  console.log("dishwasher message?");
+  console.log(JSON.stringify(req.body));
   if (req.body.event.thread_ts) {
+    console.log("in thread");
     for (let i = 0; i < dishwasherJobs.length; i++) {
       let dishwasherJob = dishwasherJobs[i];
       if (
         dishwasherJob.thread === req.body.thread_ts &&
         req.body.event.type === "app_mention"
       ) {
+        console.log("found dishwasher thread");
         let userID = req.body.event.user;
         if (req.body.event.text.toLowerCase().contains("defer")) {
+          console.log("defering");
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
           });
@@ -139,6 +144,7 @@ exports.dishwasherMessage = function(req, res) {
             dishwasherJob.thread
           );
         } else if (req.body.event.text.toLowerCase().contains("done")) {
+          console.log("done");
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
           });
@@ -150,6 +156,7 @@ exports.dishwasherMessage = function(req, res) {
             `<@channel>, Dishwasher is now empty thanks to <@${userID}>. Please wash any dishes you left in the sink now.`
           );
         } else {
+          console.log("not understood");
           sendMessage(
             `Sorry I don't understand what you are telling me.  Either say "defer" or "done".`,
             dishwasherJob.thread
