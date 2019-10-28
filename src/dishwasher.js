@@ -108,6 +108,7 @@ exports.dishwasherStart = function(req, res) {
 };
 
 exports.dishwasherMessage = function(req, res) {
+  console.log(JSON.stringify(req.body));
   if (req.body.event.thread_ts) {
     for (let i = 0; i < dishwasherJobs.length; i++) {
       let dishwasherJob = dishwasherJobs[i];
@@ -155,6 +156,7 @@ exports.dishwasherMessage = function(req, res) {
             dishwasherJob.thread
           );
         }
+        res.send("success");
         return true;
       }
     }
