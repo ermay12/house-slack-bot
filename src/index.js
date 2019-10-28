@@ -68,8 +68,8 @@ app.post("/command", function(req, res) {
       return;
     }
     switch (req.body.command) {
-      case "/dishwasher-start":
-        console.log("/dishwasher-start");
+      case "/dishwasher-started":
+        console.log("/dishwasher-started");
         dishwasherStart(req, res);
         break;
       default:
