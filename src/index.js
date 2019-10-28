@@ -1,10 +1,11 @@
 const config = require("../config.json");
 
+const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
-const request = require("request");
-const fs = require("fs");
 const app = express();
+const { dishwasherStart, dishwasherMessage } = require("./dishwasher.js");
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,34 +38,6 @@ function verifyRequest(req) {
   return req.body.token === config.token;
 }
 
-function sendMessage(message) {
-  console.log("sending message");
-  request(
-    {
-      method: "POST",
-      uri: config.webhook,
-      body: { text: message },
-      json: true
-    },
-    function(error, response, body) {
-      if (error) {
-        return console.error("Failed to send message:", error);
-      }
-      console.log("message sent.");
-    }
-  );
-}
-
-function processCommand(req, res) {
-  //sendMessage("hi did someone call me?");
-  res.send({
-    text: `Thank you <@${req.body.user_id}>`,
-    response_type: "in_channel"
-  });
-}
-
-function processNewMessage(req) {}
-
 app.post("/", function(req, res) {
   logRequest(req);
   try {
@@ -77,7 +50,10 @@ app.post("/", function(req, res) {
       res.send(req.body.challenge);
       return;
     }
-    processNewMessage(req, res);
+    if (dishwasherMessage(req, res)) {
+      return;
+    }
+    res.send("Nothing to do with message");
   } catch (error) {
     res.send("Failure: " + error);
   }
@@ -91,7 +67,14 @@ app.post("/command", function(req, res) {
       res.send("Failure: invalid token");
       return;
     }
-    processCommand(req, res);
+    switch (req.body.command) {
+      case "/dishwasher-start":
+        console.log("/dishwasher-start");
+        dishwasherStart(req, res);
+        break;
+      default:
+        throw new Error("Unsupported slash command");
+    }
   } catch (error) {
     res.send("Failure: " + error);
   }
