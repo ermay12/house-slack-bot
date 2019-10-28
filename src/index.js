@@ -5,7 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const { dishwasherStart, dishwasherMessage } = require("./dishwasher.js");
-
+const { refreshUsers, updateScore } = require("./users.js");
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -50,6 +50,14 @@ app.post("/", function(req, res) {
       res.send(req.body.challenge);
       return;
     }
+    if (
+      req.body.event.type === "member_joined_channel" ||
+      req.body.event.type === "member_left_channel"
+    ) {
+      refreshUsers();
+      res.send("ok");
+      return;
+    }
     if (dishwasherMessage(req, res)) {
       return;
     }
@@ -72,6 +80,10 @@ app.post("/command", function(req, res) {
       case "/dishwasher-started":
         console.log("/dishwasher-started");
         dishwasherStart(req, res);
+        break;
+      case "/score":
+        console.log("/score");
+        updateScore(req, res);
         break;
       default:
         throw new Error("Unsupported slash command");

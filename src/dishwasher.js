@@ -145,7 +145,10 @@ exports.dishwasherMessage = function(req, res) {
           addPoints(userID, 1);
           dishwasherJobs = dishwasherJobs.filter(d => d !== dishwasherJob);
           saveDishwasherJobs();
-          sendMessage("Thank you! +1 points for you :)", dishwasherJob.thread);
+          sendMessage(
+            `Thank you! +1 points for <@${userID}> :)`,
+            dishwasherJob.thread
+          );
           sendMessage(
             `<!channel>, Dishwasher is now empty thanks to <@${userID}>. Please wash any dishes you left in the sink now.`
           );

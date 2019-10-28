@@ -1,22 +1,11 @@
 const fs = require("fs");
 
-const { getUsers } = require("./slackAPI.js");
+const { sendMessage, getUsers } = require("./slackAPI.js");
+
 var users = require("../persistedData/users.json");
 
 function saveUsers() {
   fs.writeFileSync("./persistedData/users.json", JSON.stringify(users));
-}
-
-async function onBoot() {
-  allUsers = await getUsers().map(userId => ({ id: userId, score: 0 }));
-  allUsers.forEach(user => {
-    existingUser = users.find(v => v.id === user.id);
-    if (existingUser) {
-      user.score = existingUser.score;
-    }
-  });
-  users = allUsers;
-  saveUsers();
 }
 
 exports.getUsers = function() {
@@ -31,4 +20,25 @@ exports.addPoints = function(userID, points) {
   }
 };
 
-onBoot();
+exports.refreshUsers = async function() {
+  allUsers = await getUsers().map(userId => ({ id: userId, score: 0 }));
+  allUsers.forEach(user => {
+    existingUser = users.find(v => v.id === user.id);
+    if (existingUser) {
+      user.score = existingUser.score;
+    }
+  });
+  users = allUsers;
+  saveUsers();
+};
+
+exports.updateScore = function(req, res) {
+  let outputString = "";
+  users.forEach(user => {
+    outputString += `<@${user.id}>: ${user.score},\n`;
+  });
+  sendMessage(outputString);
+  res.send("ok");
+};
+
+exports.refreshUsers();
