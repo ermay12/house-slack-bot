@@ -46,7 +46,7 @@ app.post("/", function(req, res) {
       res.send("Failure: invalid token");
       return;
     }
-    if (res.body.type === "url_verification") {
+    if (res.body.event.type === "url_verification") {
       res.send(req.body.challenge);
       return;
     }
