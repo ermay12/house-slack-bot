@@ -37,8 +37,10 @@ exports.updateScore = function(req, res) {
   users.forEach(user => {
     outputString += `<@${user.id}>: ${user.score},\n`;
   });
-  sendMessage(outputString);
-  res.send("ok");
+  res.send({
+    text: outputString,
+    response_type: "in_channel"
+  });
 };
 
 exports.refreshUsers();
