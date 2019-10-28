@@ -55,6 +55,7 @@ app.post("/", function(req, res) {
     }
     res.send("Nothing to do with message");
   } catch (error) {
+    console.error("error: " + error);
     res.send("Failure: " + error);
   }
 });
@@ -76,6 +77,7 @@ app.post("/command", function(req, res) {
         throw new Error("Unsupported slash command");
     }
   } catch (error) {
+    console.error("error: " + error);
     res.send("Failure: " + error);
   }
 });
