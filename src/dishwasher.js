@@ -4,8 +4,8 @@ const fs = require("fs");
 const { sendMessage } = require("./slackAPI.js");
 const { getUsers, addPoints } = require("./users.js");
 
-const WASH_TIME = 10 /*S*/ * 1000; /*ms per S*/
-const REMIND_TIME = 10 /*S*/ * 1000; /*ms per S*/
+const WASH_TIME = 65 /*min*/ * 60 /*S/min*/ * 1000; /*ms per S*/
+const REMIND_TIME = 60 /*min*/ * 60 /*S/min*/ * 1000; /*ms per S*/
 
 var dishwasherJobs = require("../persistedData/dishwasherJobs");
 function saveDishwasherJobs() {
@@ -102,7 +102,7 @@ exports.dishwasherStart = function(req, res) {
   );
   saveDishwasherJobs();
   res.send({
-    text: `Thank you <@${req.body.user_id}>`,
+    text: `Thank you <@${req.body.user_id}>, +1 point to you :)`,
     response_type: "in_channel"
   });
 };
