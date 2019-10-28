@@ -116,7 +116,7 @@ exports.dishwasherMessage = function(req, res) {
         req.body.event.type === "app_mention"
       ) {
         let userID = req.body.event.user;
-        if (req.body.event.text.contains("defer")) {
+        if (req.body.event.text.toLowerCase().contains("defer")) {
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
           });
@@ -138,7 +138,7 @@ exports.dishwasherMessage = function(req, res) {
             `Thats cool. <@${nextUserID}> can you do it?`,
             dishwasherJob.thread
           );
-        } else if (req.body.event.text.contains("done")) {
+        } else if (req.body.event.text.toLowerCase().contains("done")) {
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
           });
