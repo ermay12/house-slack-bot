@@ -115,12 +115,12 @@ exports.dishwasherMessage = function(req, res) {
     for (let i = 0; i < dishwasherJobs.length; i++) {
       let dishwasherJob = dishwasherJobs[i];
       if (
-        dishwasherJob.thread === req.body.thread_ts &&
+        dishwasherJob.thread === req.body.event.thread_ts &&
         req.body.event.type === "app_mention"
       ) {
         console.log("found dishwasher thread");
         let userID = req.body.event.user;
-        if (req.body.event.text.toLowerCase().contains("defer")) {
+        if (req.body.event.text.toLowerCase().includes("defer")) {
           console.log("defering");
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
@@ -143,7 +143,7 @@ exports.dishwasherMessage = function(req, res) {
             `Thats cool. <@${nextUserID}> can you do it?`,
             dishwasherJob.thread
           );
-        } else if (req.body.event.text.toLowerCase().contains("done")) {
+        } else if (req.body.event.text.toLowerCase().includes("done")) {
           console.log("done");
           dishwasherJob.events.forEach(event => {
             event.isCancelled = true;
